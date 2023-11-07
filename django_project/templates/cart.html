@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rent Equipment Cart</title>
+    <link rel="stylesheet" href="styles.css">
+	<style>
+	/* Add your custom styles here for a beautiful design */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+main {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.equipment-list {
+    flex: 1;
+    padding: 20px;
+}
+
+.cart {
+    flex: 1;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Add more custom styles for equipment and cart items as needed */
+
+button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+	</style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Rent Equipment</h1>
+        </header>
+        <main>
+            <section class="equipment-list">
+                <h2>Available Equipment</h2>
+                <!-- Equipment items will be dynamically added here -->
+            </section>
+            <section class="cart">
+                <h2>Your Cart</h2>
+                <div id="cart-items">
+                    <!-- Cart items will be dynamically added here -->
+                </div>
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cart-total">$0</span>
+                </div>
+                <button id="checkout-btn">Checkout</button>
+            </section>
+        </main>
+    </div>
+    <script>
+	document.addEventListener("DOMContentLoaded", function () {
+    const equipmentList = document.querySelector(".equipment-list ul");
+    const cartItems = document.getElementById("cart-items");
+    const cartTotal = document.getElementById("cart-total");
+    const checkoutBtn = document.getElementById("checkout-btn");
+
+    let cart = [];
+
+    // Add equipment to the cart
+    equipmentList.addEventListener("click", (e) => {
+        if (e.target.tagName === "LI") {
+            const id = e.target.getAttribute("data-id");
+            const name = e.target.getAttribute("data-name");
+            const price = parseFloat(e.target.getAttribute("data-price"));
+
+            const item = {
+                id,
+                name,
+                price,
+                quantity: 1,
+            };
+
+            // Check if the item is already in the cart
+            const existingItem = cart.find((cartItem) => cartItem.id === id);
+
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push(item);
+            }
+
+            displayCartItems();
+            updateCartTotal();
+        }
+    });
+
+    // Remove item from the cart
+    cartItems.addEventListener("click", (e) => {
+        if (e.target.classList.contains("remove-item")) {
+            const id = e.target.getAttribute("data-id");
+            const itemIndex = cart.findIndex((cartItem) => cartItem.id === id);
+
+            if (itemIndex !== -1) {
+                cart.splice(itemIndex, 1);
+                displayCartItems();
+                updateCartTotal();
+            }
+        }
+    });
+
+    // Display cart items
+    function displayCartItems() {
+        cartItems.innerHTML = "";
+        cart.forEach((item) => {
+            const li = document.createElement("li");
+            li.innerHTML = `${item.name} - $${item.price.toFixed(2)} x ${item.quantity}
+                <button class="remove-item" data-id="${item.id}">Remove</button>`;
+            cartItems.appendChild(li);
+        });
+    }
+
+    // Update cart total
+    function updateCartTotal() {
+        const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+        cartTotal.textContent = `$${total.toFixed(2)}`;
+    }
+
+    // Checkout button functionality
+    checkoutBtn.addEventListener("click", () => {
+        // You can implement the checkout process here
+        alert("Checkout functionality is not implemented in this example.");
+    });
+});
+
+	</script>
+</body>
+</html>
